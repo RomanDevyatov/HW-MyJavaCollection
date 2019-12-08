@@ -3,7 +3,7 @@ package com.netcracker.mycollection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class MyLinkedList<E> implements Iterable<E> {
+public class MyLinkedList<E> implements ILinkedList<E> {
     private int size=0;
     private Node<E> head;
     private Node<E> tail;
