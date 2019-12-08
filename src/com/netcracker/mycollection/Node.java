@@ -1,12 +1,14 @@
-package com.netcracker;
+package com.netcracker.mycollection;
 
 public class Node<E> {
     E element;
-    Node nextNode;
+    Node<E> nextNode;
+    Node<E> prevNode;
 
-    public Node(E element, Node<E> nextNode) {
+    public Node(Node<E> prev, E element, Node<E> nextNode) {
         this.element = element;
         this.nextNode=nextNode;
+        this.prevNode=prev;
     }
 
     public E getData()
