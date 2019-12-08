@@ -1,12 +1,9 @@
 package com.netcracker.mycollection;
 
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.function.Consumer;
 
-public class MyLinkedList<E> implements ILinkedList<E> {
+public class MyLinkedList<E> implements Iterable<E> {
     private int size=0;
     private Node<E> head;
     private Node<E> tail;
@@ -185,13 +182,6 @@ public class MyLinkedList<E> implements ILinkedList<E> {
         return unlink(node(index));
     }
 
-//    public void set(E e) {
-//        if (lastReturned == null)
-//            throw new IllegalStateException();
-//        checkForComodification();
-//        lastReturned.item = e;
-//    }
-
     public E set(int index, E element) {
         checkElementIndex(index);
         Node<E> x = node(index);
@@ -239,7 +229,6 @@ public class MyLinkedList<E> implements ILinkedList<E> {
         }
     }
 
-    @Override
     public int indexOf(E element) { //from head
         int index = 0;
         for (Node<E> x = head; x != null; x = x.nextNode) {
@@ -260,134 +249,136 @@ public class MyLinkedList<E> implements ILinkedList<E> {
         return -1;
     }
 
-    public MyListIterator<E> myListIterator(int index) {
-        checkPositionIndex(index);
-        return new ListItr(index);
-    }
 
-    private class ListItr implements MyListIterator<E> {
-        private Node<E> lastReturned;
-        private Node<E> next;
-        private int nextIndex;
-        private int expectedModCount = modCount;
+//**************************
+//    public MyListIterator<E> myListIterator(int index) {
+//        checkPositionIndex(index);
+//        return new ListItr(index);
+//    }
+//
+//    private class ListItr implements MyListIterator<E> {
+//        private Node<E> lastReturned;
+//        private Node<E> next;
+//        private int nextIndex;
+//        private int expectedModCount = modCount;
+//
+//        ListItr(int index) {
+//            // assert isPositionIndex(index);
+//            next = (index == size) ? null : node(index);
+//            nextIndex = index;
+//        }
+//
+//        public boolean hasNext() {
+//            return nextIndex < size;
+//        }
+//
+//        public E next() {
+//            checkForComodification();
+//            if (!hasNext())
+//                throw new NoSuchElementException();
+//
+//            lastReturned = next;
+//            next = next.nextNode;
+//            nextIndex++;
+//            return lastReturned.element;
+//        }
+//
+//        public boolean hasPrevious() {
+//            return nextIndex > 0;
+//        }
+//
+//        public E previous() {
+//            checkForComodification();
+//            if (!hasPrevious())
+//                throw new NoSuchElementException();
+//
+//            lastReturned = next = (next == null) ? tail : next.prevNode;
+//            nextIndex--;
+//            return lastReturned.element;
+//        }
+//
+//        public int nextIndex() {
+//            return nextIndex;
+//        }
+//
+//        public int previousIndex() {
+//            return nextIndex - 1;
+//        }
+//
+//        public void remove() {
+//            checkForComodification();
+//            if (lastReturned == null)
+//                throw new IllegalStateException();
+//
+//            Node<E> lastNext = lastReturned.nextNode;
+//            unlink(lastReturned);
+//            if (next == lastReturned)
+//                next = lastNext;
+//            else
+//                nextIndex--;
+//            lastReturned = null;
+//            expectedModCount++;
+//        }
+//
+//        public void set(E e) {
+//            if (lastReturned == null)
+//                throw new IllegalStateException();
+//            checkForComodification();
+//            lastReturned.element = e;
+//        }
+//
+//        public void add(E e) {
+//            checkForComodification();
+//            lastReturned = null;
+//            if (next == null)
+//                linkLast(e);
+//            else
+//                linkBefore(e, next);
+//            nextIndex++;
+//            expectedModCount++;
+//        }
+//
+//        public void forEachRemaining(Consumer<? super E> action) {
+//            Objects.requireNonNull(action);
+//            while (modCount == expectedModCount && nextIndex < size) {
+//                action.accept(next.element);
+//                lastReturned = next;
+//                next = next.nextNode;
+//                nextIndex++;
+//            }
+//            checkForComodification();
+//        }
+//
+//        final void checkForComodification() {
+//            if (modCount != expectedModCount)
+//                throw new ConcurrentModificationException();
+//        }
+//    }
+//
+//
+//    private MyLinkedList<E> superClone() {
+//        try {
+//            return (MyLinkedList<E>) super.clone();
+//        } catch (CloneNotSupportedException e) {
+//            throw new InternalError(e);
+//        }
+//    }
 
-        ListItr(int index) {
-            // assert isPositionIndex(index);
-            next = (index == size) ? null : node(index);
-            nextIndex = index;
-        }
 
-        public boolean hasNext() {
-            return nextIndex < size;
-        }
-
-        public E next() {
-            checkForComodification();
-            if (!hasNext())
-                throw new NoSuchElementException();
-
-            lastReturned = next;
-            next = next.nextNode;
-            nextIndex++;
-            return lastReturned.element;
-        }
-
-        public boolean hasPrevious() {
-            return nextIndex > 0;
-        }
-
-        public E previous() {
-            checkForComodification();
-            if (!hasPrevious())
-                throw new NoSuchElementException();
-
-            lastReturned = next = (next == null) ? tail : next.prevNode;
-            nextIndex--;
-            return lastReturned.element;
-        }
-
-        public int nextIndex() {
-            return nextIndex;
-        }
-
-        public int previousIndex() {
-            return nextIndex - 1;
-        }
-
-        public void remove() {
-            checkForComodification();
-            if (lastReturned == null)
-                throw new IllegalStateException();
-
-            Node<E> lastNext = lastReturned.nextNode;
-            unlink(lastReturned);
-            if (next == lastReturned)
-                next = lastNext;
-            else
-                nextIndex--;
-            lastReturned = null;
-            expectedModCount++;
-        }
-
-        public void set(E e) {
-            if (lastReturned == null)
-                throw new IllegalStateException();
-            checkForComodification();
-            lastReturned.element = e;
-        }
-
-        public void add(E e) {
-            checkForComodification();
-            lastReturned = null;
-            if (next == null)
-                linkLast(e);
-            else
-                linkBefore(e, next);
-            nextIndex++;
-            expectedModCount++;
-        }
-
-        public void forEachRemaining(Consumer<? super E> action) {
-            Objects.requireNonNull(action);
-            while (modCount == expectedModCount && nextIndex < size) {
-                action.accept(next.element);
-                lastReturned = next;
-                next = next.nextNode;
-                nextIndex++;
-            }
-            checkForComodification();
-        }
-
-        final void checkForComodification() {
-            if (modCount != expectedModCount)
-                throw new ConcurrentModificationException();
-        }
-    }
-
-
-    private MyLinkedList<E> superClone() {
-        try {
-            return (MyLinkedList<E>) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new InternalError(e);
-        }
-    }
-
-
-    public Object clone() {
-        MyLinkedList<E> clone = superClone();
-
-        // Put clone into "virgin" state
-        clone.head = clone.tail = null;
-        clone.size = 0;
-        clone.modCount = 0;
-
-        // Initialize clone with our elements
-        for (Node<E> x = head; x != null; x = x.nextNode)
-            clone.add(x.element);
-
-        return clone;
-    }
+//    public Object clone() {
+//        MyLinkedList<E> clone = superClone();
+//
+//        // Put clone into "virgin" state
+//        clone.head = clone.tail = null;
+//        clone.size = 0;
+//        clone.modCount = 0;
+//
+//        // Initialize clone with our elements
+//        for (Node<E> x = head; x != null; x = x.nextNode)
+//            clone.add(x.element);
+//
+//        return clone;
+//    }
 
 
     public Node<E> getHead(){
@@ -399,19 +390,26 @@ public class MyLinkedList<E> implements ILinkedList<E> {
         return tail;
     }
 
-    @Override
-    public MyListIterator<E> listIterator(int index) {
-        return null;
-    }
+
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new MyListIterator<E>(this);
     }
 
-    public E getE(){
-        return this.head.element;
-    }
+//    @Override
+//    public MyListIterator<E> listIterator(int index) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Iterator<E> iterator() {
+//        return null;
+//    }
+
+//    public E getE(){
+//        return this.head.element;
+//    }
 
 
 //    public void add(Object element) {
@@ -529,8 +527,6 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 //    }
 
 
-
-    @Override
     public boolean isEmpty() {
         return size==0;
     }
